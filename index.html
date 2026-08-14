@@ -42,6 +42,13 @@
     *{animation-duration:0.001ms !important; animation-iteration-count:1 !important; transition-duration:0.001ms !important; scroll-behavior:auto !important;}
   }
 
+  /* ---------- SCROLL PROGRESS ---------- */
+  #scrollProgress{
+    position:fixed; top:0; left:0; height:3px; width:0%;
+    background:linear-gradient(90deg, var(--violet), var(--teal));
+    z-index:200; transition:width .08s linear;
+  }
+
   /* ---------- NAV ---------- */
   nav{
     position:fixed; top:0; left:0; right:0; z-index:100;
@@ -76,9 +83,25 @@
     position:relative;
     min-height:100vh;
     display:flex; align-items:center;
+    overflow:hidden;
   }
+
+  /* ambient floating orbs, kept subtle behind the console */
+  .orb{
+    position:absolute; border-radius:50%; filter:blur(60px); opacity:0.35; pointer-events:none;
+    animation:float 14s ease-in-out infinite;
+  }
+  .orb1{width:280px;height:280px; background:var(--violet); top:8%; left:2%; animation-delay:0s;}
+  .orb2{width:220px;height:220px; background:var(--teal); bottom:6%; right:6%; animation-delay:-5s;}
+  .orb3{width:160px;height:160px; background:var(--coral); top:55%; left:38%; opacity:0.18; animation-delay:-9s;}
+  @keyframes float{
+    0%,100%{transform:translate(0,0) scale(1);}
+    50%{transform:translate(20px,-30px) scale(1.08);}
+  }
+
   .hero-grid{
     display:grid; grid-template-columns:1.1fr 0.9fr; gap:48px; align-items:center; width:100%;
+    position:relative; z-index:1;
   }
   @media (max-width:900px){ .hero-grid{grid-template-columns:1fr;} }
 
@@ -100,7 +123,13 @@
   }
   .hero h1 .accent{
     background:linear-gradient(100deg, var(--teal), var(--violet) 70%);
+    background-size:200% auto;
     -webkit-background-clip:text; background-clip:text; color:transparent;
+    animation:sheen 6s ease-in-out infinite;
+  }
+  @keyframes sheen{
+    0%,100%{background-position:0% center;}
+    50%{background-position:100% center;}
   }
   .hero p.lede{
     font-size:1.08rem; color:#AEB8D0; max-width:520px; line-height:1.65; margin-bottom:36px;
@@ -163,7 +192,9 @@
     border:1px solid var(--line); border-radius:12px; padding:22px;
     background:var(--paper);
     border-left:3px solid var(--violet);
+    transition:transform .2s ease, box-shadow .2s ease;
   }
+  .stat-card:hover{transform:translateY(-3px); box-shadow:0 16px 28px -18px rgba(20,20,40,0.25);}
   .stat-card:nth-child(2){border-left-color:var(--teal);}
   .stat-card:nth-child(3){border-left-color:var(--coral);}
   .stat-card:nth-child(4){border-left-color:var(--amber);}
@@ -175,14 +206,22 @@
   #skills .kicker{color:var(--teal);}
   #skills .section-head p{color:#AEB8D0;}
   .skill-groups{display:grid; grid-template-columns:repeat(auto-fit,minmax(240px,1fr)); gap:28px;}
-  .skill-group{background:var(--navy-2); border:1px solid var(--line-dark); border-radius:12px; padding:24px;}
+  .skill-group{background:var(--navy-2); border:1px solid var(--line-dark); border-radius:12px; padding:24px; transition:border-color .2s, transform .2s;}
+  .skill-group:hover{border-color:var(--teal); transform:translateY(-3px);}
   .skill-group h3{font-size:1rem; margin-bottom:16px; color:var(--amber); font-family:'JetBrains Mono',monospace; font-weight:500;}
   .skill-row{margin-bottom:14px;}
   .skill-row:last-child{margin-bottom:0;}
   .skill-row-top{display:flex; justify-content:space-between; font-size:0.86rem; margin-bottom:6px; color:#D5DBEA;}
   .skill-track{height:6px; background:#1C2740; border-radius:99px; overflow:hidden;}
-  .skill-fill{height:100%; border-radius:99px; background:linear-gradient(90deg, var(--violet), var(--teal)); width:0; transition:width 1.1s cubic-bezier(.2,.8,.2,1);}
+  .skill-fill{height:100%; border-radius:99px; background:linear-gradient(90deg, var(--violet), var(--teal)); width:0; transition:width 1.1s cubic-bezier(.2,.8,.2,1); position:relative; overflow:hidden;}
   .skill-fill.in-view{width:var(--w);}
+  .skill-fill::after{
+    content:""; position:absolute; inset:0;
+    background:linear-gradient(90deg, transparent, rgba(255,255,255,0.35), transparent);
+    transform:translateX(-100%);
+  }
+  .skill-fill.in-view::after{animation:shimmer 1.6s ease .9s;}
+  @keyframes shimmer{to{transform:translateX(100%);}}
 
   /* ---------- PROJECTS ---------- */
   #projects{background:var(--paper);}
@@ -197,15 +236,22 @@
     content:""; position:absolute; top:0; left:0; right:0; height:4px;
     background:var(--accent, var(--violet));
   }
+  /* cursor-follow spotlight, set via mousemove JS */
+  .project-card::after{
+    content:""; position:absolute; inset:0; pointer-events:none; opacity:0; transition:opacity .3s;
+    background:radial-gradient(220px circle at var(--mx,50%) var(--my,50%), rgba(108,92,231,0.10), transparent 70%);
+  }
+  .project-card:hover::after{opacity:1;}
   .project-card:hover{transform:translateY(-5px); box-shadow:0 24px 40px -22px rgba(20,20,40,0.25); border-color:transparent;}
   .project-top{display:flex; align-items:center; justify-content:space-between;}
-  .project-emoji{font-size:1.5rem;}
+  .project-emoji{font-size:1.5rem; display:inline-block; transition:transform .3s;}
+  .project-card:hover .project-emoji{transform:scale(1.15) rotate(-6deg);}
   .project-card h3{font-size:1.2rem; font-weight:700;}
   .project-card .desc{color:var(--muted); font-size:0.94rem; line-height:1.6; flex-grow:1;}
   .tag-row{display:flex; flex-wrap:wrap; gap:6px;}
   .tag{font-family:'JetBrains Mono',monospace; font-size:0.72rem; background:var(--paper); border:1px solid var(--line); padding:4px 9px; border-radius:99px; color:#4A5468;}
-  .project-link{font-size:0.86rem; font-weight:600; color:var(--accent, var(--violet)); display:inline-flex; align-items:center; gap:5px; margin-top:4px;}
-  .project-link:hover{text-decoration:underline;}
+  .project-link{font-size:0.86rem; font-weight:600; color:var(--accent, var(--violet)); display:inline-flex; align-items:center; gap:5px; margin-top:4px; transition:gap .2s;}
+  .project-link:hover{text-decoration:underline; gap:9px;}
 
   /* ---------- CERTS / ACHIEVEMENTS ---------- */
   #journey{background:var(--panel);}
@@ -213,12 +259,15 @@
   @media (max-width:800px){.journey-grid{grid-template-columns:1fr;}}
   .journey-col h3{font-family:'JetBrains Mono',monospace; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:22px;}
   .timeline{list-style:none; border-left:2px solid var(--line); padding-left:24px;}
-  .timeline li{position:relative; padding-bottom:26px;}
+  .timeline li{position:relative; padding-bottom:26px; opacity:0; transform:translateX(-10px); transition:opacity .5s ease, transform .5s ease;}
+  .timeline li.in-view{opacity:1; transform:translateX(0);}
   .timeline li:last-child{padding-bottom:0;}
   .timeline li::before{
     content:""; position:absolute; left:-30px; top:4px; width:11px; height:11px; border-radius:50%;
     background:var(--panel); border:2px solid var(--teal);
+    transition:box-shadow .3s;
   }
+  .timeline li.in-view::before{box-shadow:0 0 0 5px rgba(0,201,167,0.15);}
   .timeline .t-title{font-weight:600; font-size:0.98rem;}
   .timeline .t-meta{color:var(--muted); font-size:0.85rem; margin-top:3px;}
 
@@ -249,6 +298,8 @@
 </head>
 <body>
 
+<div id="scrollProgress"></div>
+
 <nav>
   <div class="logo">vishnu<span>.suthar</span></div>
   <button class="navtoggle" id="navToggle" aria-label="Toggle menu">☰</button>
@@ -262,6 +313,9 @@
 </nav>
 
 <header class="hero">
+  <div class="orb orb1" aria-hidden="true"></div>
+  <div class="orb orb2" aria-hidden="true"></div>
+  <div class="orb orb3" aria-hidden="true"></div>
   <div class="hero-grid">
     <div>
       <div class="eyebrow"><span class="dot"></span> OPEN TO DATA ANALYST ROLES</div>
@@ -306,9 +360,9 @@
       <p>Based in Jodhpur, India — open to remote and on-site opportunities.</p>
     </div>
     <div class="stat-cards reveal">
-      <div class="stat-card"><div class="num">11+</div><div class="label">Repositories shipped</div></div>
-      <div class="stat-card"><div class="num">5</div><div class="label">Featured projects</div></div>
-      <div class="stat-card"><div class="num">2</div><div class="label">Certifications earned</div></div>
+      <div class="stat-card"><div class="num" data-count="11">0</div><div class="label">Repositories shipped</div></div>
+      <div class="stat-card"><div class="num" data-count="6">0</div><div class="label">Featured projects</div></div>
+      <div class="stat-card"><div class="num" data-count="2">0</div><div class="label">Certifications earned</div></div>
       <div class="stat-card"><div class="num">Final yr</div><div class="label">BCA, Lachoo Memorial College</div></div>
     </div>
   </div>
@@ -355,6 +409,16 @@
     <p>Applied ML and data projects, from chat analytics to spam detection.</p>
   </div>
   <div class="project-grid reveal">
+
+    <div class="project-card" style="--accent:#FFA94D">
+      <div class="project-top"><span class="project-emoji">🚕</span></div>
+      <h3>Taxi Fare Dashboard</h3>
+      <p class="desc">Power BI dashboard analyzing ~59K ride bookings — booking status, vehicle-type performance, cancellation reasons, customer/driver ratings, and revenue by distance, tier, and time of day.</p>
+      <div class="tag-row">
+        <span class="tag">Power BI</span><span class="tag">DAX</span><span class="tag">Data Analysis</span>
+      </div>
+      <a class="project-link" href="https://github.com/Vishnucmd234/Taxi_Fare_Dashboard" target="_blank" rel="noopener">View on GitHub →</a>
+    </div>
 
     <div class="project-card" style="--accent:#6C5CE7">
       <div class="project-top"><span class="project-emoji">💬</span></div>
@@ -455,9 +519,20 @@
   navToggle.addEventListener('click', () => navLinks.classList.toggle('open'));
   navLinks.querySelectorAll('a').forEach(a => a.addEventListener('click', () => navLinks.classList.remove('open')));
 
+  // scroll progress bar
+  const progressBar = document.getElementById('scrollProgress');
+  function updateProgress(){
+    const h = document.documentElement;
+    const scrolled = (h.scrollTop) / (h.scrollHeight - h.clientHeight) * 100;
+    progressBar.style.width = scrolled + '%';
+  }
+  window.addEventListener('scroll', updateProgress, {passive:true});
+  updateProgress();
+
   // scroll reveal
   const revealEls = document.querySelectorAll('.reveal');
   const skillFills = document.querySelectorAll('.skill-fill');
+  const timelineItems = document.querySelectorAll('.timeline li');
   const io = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if(e.isIntersecting){
@@ -476,6 +551,47 @@
     });
   }, {threshold:0.3});
   skillFills.forEach(el => skillIo.observe(el));
+
+  const timelineIo = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if(e.isIntersecting){
+        setTimeout(() => e.target.classList.add('in-view'), i * 80);
+        timelineIo.unobserve(e.target);
+      }
+    });
+  }, {threshold:0.4});
+  timelineItems.forEach(el => timelineIo.observe(el));
+
+  // count-up stat numbers
+  const countEls = document.querySelectorAll('.num[data-count]');
+  const countIo = new IntersectionObserver((entries) => {
+    entries.forEach(e => {
+      if(e.isIntersecting){
+        const el = e.target;
+        const target = parseInt(el.getAttribute('data-count'), 10);
+        const duration = 900;
+        const start = performance.now();
+        function tick(now){
+          const p = Math.min((now - start) / duration, 1);
+          const eased = 1 - Math.pow(1 - p, 3);
+          el.textContent = Math.round(eased * target);
+          if(p < 1) requestAnimationFrame(tick);
+        }
+        requestAnimationFrame(tick);
+        countIo.unobserve(el);
+      }
+    });
+  }, {threshold:0.5});
+  countEls.forEach(el => countIo.observe(el));
+
+  // cursor-follow spotlight on project cards
+  document.querySelectorAll('.project-card').forEach(card => {
+    card.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      card.style.setProperty('--mx', (e.clientX - rect.left) + 'px');
+      card.style.setProperty('--my', (e.clientY - rect.top) + 'px');
+    });
+  });
 </script>
 
 </body>
