@@ -191,7 +191,39 @@
   .console-line b{color:var(--amber); font-weight:500;}
 
   .bars{display:flex; align-items:flex-end; gap:8px; height:110px; margin-top:22px; padding-top:16px; border-top:1px solid var(--line-dark);}
-  .bar{flex:1; border-radius:4px 4px 0 0; background:linear-gradient(180deg, var(--violet), var(--teal)); height:0; transform-origin:bottom;}
+  .bar-wrap{flex:1; height:100%; position:relative; display:flex; align-items:flex-end;}
+  .bar{
+    width:100%; border-radius:4px 4px 0 0; background:linear-gradient(180deg, var(--violet), var(--teal));
+    height:0; transform-origin:bottom;
+    transition:transform .28s cubic-bezier(.2,.8,.2,1), filter .28s ease, box-shadow .28s ease;
+    cursor:none;
+  }
+  .bar-wrap:hover .bar{
+    transform:scaleY(1.07) translateY(-3px);
+    filter:brightness(1.2) saturate(1.15);
+    box-shadow:0 0 16px 2px rgba(0,201,167,0.45), 0 0 4px rgba(108,92,231,0.5);
+  }
+  .bar-wrap::after{
+    content:""; position:absolute; left:50%; bottom:0; width:1px; height:0;
+    background:linear-gradient(rgba(0,201,167,0), rgba(0,201,167,0.5));
+    transform:translateX(-50%); transition:height .25s ease; pointer-events:none;
+  }
+  .bar-wrap:hover::after{height:calc(100% + 8px);}
+  .bar-tip{
+    position:absolute; left:50%; bottom:calc(100% + 10px); transform:translateX(-50%) translateY(6px);
+    background:var(--navy); border:1px solid var(--line-dark); border-radius:7px;
+    padding:5px 9px; white-space:nowrap; pointer-events:none;
+    opacity:0; transition:opacity .22s ease, transform .22s ease;
+    box-shadow:0 10px 20px -8px rgba(0,0,0,0.5);
+    z-index:5;
+  }
+  .bar-wrap:hover .bar-tip{opacity:1; transform:translateX(-50%) translateY(0);}
+  .bar-tip .tip-label{font-family:'JetBrains Mono',monospace; font-size:0.62rem; color:#8492AE; letter-spacing:0.03em; display:block;}
+  .bar-tip .tip-value{font-family:'JetBrains Mono',monospace; font-size:0.76rem; color:var(--teal); font-weight:600; display:block; margin-top:1px;}
+  .bar-tip::after{
+    content:""; position:absolute; top:100%; left:50%; transform:translateX(-50%);
+    border:5px solid transparent; border-top-color:var(--navy);
+  }
 
   .scroll-cue{
     position:absolute; bottom:28px; left:50%; transform:translateX(-50%);
@@ -381,13 +413,34 @@
       <div class="console-line l3">&gt; stack = [<b>"Python"</b>, <b>"ML"</b>, <b>"SQL"</b>, <b>"Viz"</b>]</div>
       <div class="console-line l4">&gt; status: <b>ready_to_ship()</b></div>
       <div class="bars" aria-hidden="true">
-        <div class="bar" style="--h:40%"></div>
-        <div class="bar" style="--h:65%"></div>
-        <div class="bar" style="--h:50%"></div>
-        <div class="bar" style="--h:85%"></div>
-        <div class="bar" style="--h:60%"></div>
-        <div class="bar" style="--h:95%"></div>
-        <div class="bar" style="--h:70%"></div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:40%"></div>
+          <div class="bar-tip"><span class="tip-label">Nulls Handled</span><span class="tip-value">40%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:65%"></div>
+          <div class="bar-tip"><span class="tip-label">SQL Queries</span><span class="tip-value">65%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:50%"></div>
+          <div class="bar-tip"><span class="tip-label">Features Built</span><span class="tip-value">50%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:85%"></div>
+          <div class="bar-tip"><span class="tip-label">Model Accuracy</span><span class="tip-value">85%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:60%"></div>
+          <div class="bar-tip"><span class="tip-label">Pipelines Run</span><span class="tip-value">60%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:95%"></div>
+          <div class="bar-tip"><span class="tip-label">Insights Found</span><span class="tip-value">95%</span></div>
+        </div>
+        <div class="bar-wrap">
+          <div class="bar" style="--h:70%"></div>
+          <div class="bar-tip"><span class="tip-label">Reports Shipped</span><span class="tip-value">70%</span></div>
+        </div>
       </div>
     </div>
   </div>
@@ -608,7 +661,7 @@
       ring.style.left = rx+'px'; ring.style.top = ry+'px';
       requestAnimationFrame(loop);
     })();
-    document.querySelectorAll('a,button,.project-card').forEach(function(el){
+    document.querySelectorAll('a,button,.project-card,.bar-wrap').forEach(function(el){
       el.addEventListener('mouseenter', function(){ ring.classList.add('hovered'); });
       el.addEventListener('mouseleave', function(){ ring.classList.remove('hovered'); });
     });
