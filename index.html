@@ -676,9 +676,91 @@
   #about .section-head p,#projects .section-head p{color:#AEB8D0;}
 
   .reveal{opacity:0; transform:translateY(24px); will-change:transform,opacity;}
+
+  /* ---------- GLOBAL COLORFUL STAR FIELD ---------- */
+  .site-stars{
+    position:fixed;
+    inset:0;
+    z-index:1;
+    pointer-events:none;
+    overflow:hidden;
+  }
+  .site-star{
+    position:absolute;
+    width:var(--star-size);
+    height:var(--star-size);
+    left:var(--star-x);
+    top:var(--star-y);
+    border-radius:50%;
+    background:var(--star-color);
+    opacity:var(--star-opacity);
+    box-shadow:
+      0 0 4px var(--star-color),
+      0 0 10px var(--star-color),
+      0 0 18px color-mix(in srgb, var(--star-color) 65%, transparent);
+    animation:
+      starTwinkle var(--star-duration) ease-in-out var(--star-delay) infinite alternate,
+      starDrift var(--drift-duration) ease-in-out var(--drift-delay) infinite alternate;
+    will-change:transform,opacity;
+  }
+  .site-star::after{
+    content:"";
+    position:absolute;
+    inset:-70%;
+    border-radius:50%;
+    background:radial-gradient(circle, var(--star-color) 0%, transparent 68%);
+    opacity:.35;
+  }
+
+  @keyframes starTwinkle{
+    0%{
+      opacity:.16;
+      transform:scale(.55);
+      filter:brightness(.75);
+    }
+    45%{
+      opacity:.62;
+      transform:scale(1);
+      filter:brightness(1);
+    }
+    100%{
+      opacity:1;
+      transform:scale(1.35);
+      filter:brightness(1.45);
+    }
+  }
+
+  @keyframes starDrift{
+    0%{margin-left:-2px;margin-top:-1px;}
+    100%{margin-left:3px;margin-top:2px;}
+  }
+
+  /* Keep all website content above the decorative star field. */
+  nav, header, section, footer, .marquee-band{
+    position:relative;
+    z-index:2;
+  }
+  #preloader, #scrollProgress, #readout, .cursor-dot, .cursor-ring{
+    z-index:10000;
+  }
+
+  @media (max-width:900px){
+    .site-star{
+      box-shadow:
+        0 0 3px var(--star-color),
+        0 0 7px var(--star-color);
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .site-stars{display:none;}
+  }
+
 </style>
 </head>
 <body>
+<div class="site-stars" id="siteStars" aria-hidden="true"></div>
+
 
 <div class="cursor-dot"></div>
 <div class="cursor-ring"></div>
@@ -938,6 +1020,62 @@
   </div>
   <div class="foot-bottom">© 2026 Vishnu Suthar · Jodhpur, India</div>
 </footer>
+
+
+<script>
+/* ---------- GLOBAL 160+ COLORFUL GLOWING STARS ---------- */
+(function(){
+  var field = document.getElementById('siteStars');
+  if(!field) return;
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+
+  var count = 160;
+
+  for(var i=0;i<count;i++){
+    var star = document.createElement('span');
+    star.className = 'site-star';
+
+    /* Full-spectrum colors: red, orange, yellow, green, cyan,
+       blue, violet, pink and everything between. */
+    var hue = Math.floor(Math.random()*360);
+    var saturation = 72 + Math.floor(Math.random()*28);
+    var lightness = 62 + Math.floor(Math.random()*25);
+
+    var size = (1.5 + Math.random()*3.8).toFixed(2) + 'px';
+    var opacity = (0.30 + Math.random()*0.55).toFixed(2);
+
+    star.style.setProperty('--star-x',(Math.random()*100).toFixed(2)+'%');
+    star.style.setProperty('--star-y',(Math.random()*100).toFixed(2)+'%');
+    star.style.setProperty('--star-size',size);
+    star.style.setProperty('--star-opacity',opacity);
+    star.style.setProperty(
+      '--star-color',
+      'hsl('+hue+' '+saturation+'% '+lightness+'%)'
+    );
+
+    star.style.setProperty(
+      '--star-duration',
+      (1.7 + Math.random()*3.8).toFixed(2)+'s'
+    );
+    star.style.setProperty(
+      '--star-delay',
+      (-Math.random()*5).toFixed(2)+'s'
+    );
+    star.style.setProperty(
+      '--drift-duration',
+      (3.5 + Math.random()*6).toFixed(2)+'s'
+    );
+    star.style.setProperty(
+      '--drift-delay',
+      (-Math.random()*6).toFixed(2)+'s'
+    );
+
+    field.appendChild(star);
+  }
+})();
+</script>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/loaders/GLTFLoader.js"></script>
