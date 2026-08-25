@@ -498,6 +498,204 @@
     .journey-motion-lane{display:none;}
   }
 
+
+  /* ---------- CERTIFICATION 3D INTERACTION ---------- */
+  #journey{
+    position:relative;
+    min-height:760px;
+    overflow:hidden;
+    isolation:isolate;
+  }
+
+  #journey > .section-head,
+  #journey > .journey-grid{
+    position:relative;
+    z-index:5;
+  }
+
+  #journey .journey-grid{
+    max-width:900px;
+  }
+
+  .cert-bg-visual{
+    position:absolute;
+    z-index:1;
+    top:8%;
+    right:2%;
+    width:min(58vw,760px);
+    height:82%;
+    pointer-events:none;
+  }
+
+  .cert-character-wrap{
+    position:absolute;
+    inset:7% 2% 4% 2%;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    overflow:visible;
+    filter:drop-shadow(0 28px 35px rgba(0,0,0,.42));
+    transform-origin:center;
+    pointer-events:none;
+  }
+
+  #certificate3d{
+    width:100%;
+    height:100%;
+    display:block;
+    overflow:visible;
+  }
+
+  .cert-orbit-ring{
+    position:absolute;
+    left:50%;
+    top:57%;
+    width:min(92%,620px);
+    aspect-ratio:1.65 / 1;
+    transform:translate(-50%,-50%) rotate(-9deg);
+    border:2px solid rgba(108,92,231,.72);
+    border-radius:50%;
+    box-shadow:
+      0 0 10px rgba(108,92,231,.75),
+      0 0 30px rgba(0,201,167,.24),
+      inset 0 0 18px rgba(108,92,231,.20);
+    opacity:.95;
+  }
+
+  .cert-orbit-ring::before,
+  .cert-orbit-ring::after{
+    content:"";
+    position:absolute;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:
+      0 0 8px #fff,
+      0 0 18px var(--teal),
+      0 0 30px var(--violet);
+  }
+
+  .cert-orbit-ring::before{
+    width:8px;height:8px;
+    left:12%;top:13%;
+  }
+
+  .cert-orbit-ring::after{
+    width:7px;height:7px;
+    right:10%;bottom:17%;
+  }
+
+  .cert-particles{
+    position:absolute;
+    inset:0;
+    overflow:hidden;
+  }
+
+  .cert-particles span{
+    position:absolute;
+    width:4px;height:4px;
+    border-radius:50%;
+    background:#fff;
+    box-shadow:0 0 10px 2px rgba(0,201,167,.75);
+    opacity:.7;
+    animation:certTwinkle 2.8s ease-in-out infinite;
+  }
+
+  .cert-particles span:nth-child(1){left:16%;top:22%;animation-delay:.1s;}
+  .cert-particles span:nth-child(2){left:70%;top:16%;animation-delay:.8s;}
+  .cert-particles span:nth-child(3){left:88%;top:42%;animation-delay:1.3s;}
+  .cert-particles span:nth-child(4){left:22%;top:70%;animation-delay:1.8s;}
+  .cert-particles span:nth-child(5){left:76%;top:78%;animation-delay:.5s;}
+  .cert-particles span:nth-child(6){left:50%;top:9%;animation-delay:2s;}
+
+  @keyframes certTwinkle{
+    0%,100%{transform:scale(.65);opacity:.35;}
+    50%{transform:scale(1.7);opacity:1;}
+  }
+
+  .cert-character-controls{
+    position:absolute;
+    z-index:8;
+    top:34%;
+    right:6vw;
+    display:flex;
+    flex-direction:column;
+    gap:10px;
+    width:min(210px,22vw);
+  }
+
+  .cert-action{
+    appearance:none;
+    border:1px solid rgba(108,92,231,.48);
+    background:rgba(11,18,32,.76);
+    color:#F4F7FC;
+    backdrop-filter:blur(10px);
+    border-radius:12px;
+    padding:12px 15px;
+    font:600 .82rem 'Inter',sans-serif;
+    cursor:pointer;
+    text-align:left;
+    transition:
+      transform .22s ease,
+      border-color .22s ease,
+      box-shadow .22s ease,
+      background .22s ease;
+  }
+
+  .cert-action:hover{
+    transform:translateX(-5px) scale(1.035);
+    border-color:var(--teal);
+    background:rgba(17,27,46,.92);
+    box-shadow:
+      0 0 12px rgba(0,201,167,.22),
+      0 0 30px rgba(108,92,231,.18);
+  }
+
+  .cert-action:active{transform:translateX(-2px) scale(.98);}
+  .cert-die:hover{border-color:#FF6B6B;box-shadow:0 0 20px rgba(255,107,107,.28);}
+  .cert-fight:hover{border-color:#FFC145;box-shadow:0 0 20px rgba(255,193,69,.24);}
+  .cert-spin:hover{border-color:var(--teal);box-shadow:0 0 20px rgba(0,201,167,.25);}
+
+  @media (max-width:1000px){
+    #journey{min-height:820px;}
+    .cert-bg-visual{
+      right:-4%;
+      width:68vw;
+      height:62%;
+      top:27%;
+      opacity:.86;
+    }
+    .cert-character-controls{
+      top:13%;
+      right:5vw;
+      width:190px;
+    }
+  }
+
+  @media (max-width:800px){
+    #journey{min-height:980px;}
+    .cert-bg-visual{
+      top:34%;
+      right:0;
+      width:100%;
+      height:48%;
+      opacity:.55;
+    }
+    .cert-character-controls{
+      position:relative;
+      top:auto;
+      right:auto;
+      width:min(100%,340px);
+      margin:0 0 32px auto;
+      z-index:8;
+    }
+    .cert-action{text-align:center;}
+    .cert-orbit-ring{width:88%;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    .cert-particles{display:none;}
+  }
+
   /* ---------- CONTACT ---------- */
   #contact{
     background:var(--navy); color:#fff; text-align:center;
@@ -756,12 +954,20 @@
 </section>
 
 <section id="journey">
-  <div class="journey-motion-lane" id="journeyMotionLane" aria-hidden="true">
-    <div class="roll-item roll-character" id="journeyCharacter">
+  <div class="cert-bg-visual" aria-hidden="true">
+    <div class="cert-orbit-ring" id="journeyCircle"></div>
+    <div class="cert-character-wrap" id="journeyCharacter">
       <canvas id="certificate3d"></canvas>
     </div>
-    <div class="roll-item roll-star" id="journeyStar"><span>★</span></div>
-    <div class="roll-item roll-circle" id="journeyCircle"><span></span></div>
+    <div class="cert-particles">
+      <span></span><span></span><span></span><span></span><span></span><span></span>
+    </div>
+  </div>
+
+  <div class="cert-character-controls" aria-label="3D character controls">
+    <button type="button" class="cert-action cert-die" id="certDie">💀 Make Me Die</button>
+    <button type="button" class="cert-action cert-fight" id="certFight">⚔️ Make Me Fight</button>
+    <button type="button" class="cert-action cert-spin" id="certSpin">🌀 Make Me Spin</button>
   </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
@@ -878,6 +1084,20 @@
     model.rotation.y = -0.22;
     model.rotation.z = -0.035;
 
+    /* Play the uploaded GLB's built-in movement animation. */
+    window.certAnimationMixer = null;
+    if(gltf.animations && gltf.animations.length){
+      window.certAnimationMixer = new THREE.AnimationMixer(model);
+      var movementClip = gltf.animations.find(function(a){ return a.name === 'movement'; }) || gltf.animations[0];
+      var movementAction = window.certAnimationMixer.clipAction(movementClip);
+      movementAction.play();
+      window.certMovementAction = movementAction;
+    }
+
+    window.cert3DCharacter = model;
+    window.cert3DRoot = root;
+    window.cert3DState = 'idle';
+
     resize3D();
     requestAnimationFrame(animate3D);
   }, function(error){
@@ -894,15 +1114,21 @@
   window.addEventListener('resize', resize3D);
 
   var t = 0;
+  var clock = new THREE.Clock();
   function animate3D(){
     requestAnimationFrame(animate3D);
-    t += 0.012;
+    var delta = Math.min(clock.getDelta(), .05);
+    t += delta;
 
-    if(model){
-      /* Slow floating + gentle side-to-side motion. */
-      model.position.y = Math.sin(t * 1.05) * 0.025;
-      model.rotation.y = -0.22 + Math.sin(t * 0.55) * 0.07;
-      model.rotation.z = -0.035 + Math.sin(t * 0.8) * 0.010;
+    if(window.certAnimationMixer){
+      window.certAnimationMixer.update(delta);
+    }
+
+    if(model && window.cert3DState === 'idle'){
+      /* Gentle background floating while the character is idle. */
+      model.position.y = Math.sin(t * 1.15) * 0.025;
+      model.rotation.y = -0.22 + Math.sin(t * 0.55) * 0.055;
+      model.rotation.z = -0.035 + Math.sin(t * 0.8) * 0.008;
     }
 
     renderer.render(scene, camera);
@@ -1178,6 +1404,155 @@
   });
 
   ScrollTrigger.refresh();
+})();
+</script>
+
+
+<script>
+/* ---------- CERTIFICATION CHARACTER ACTION BUTTONS ---------- */
+(function(){
+  var dieBtn = document.getElementById('certDie');
+  var fightBtn = document.getElementById('certFight');
+  var spinBtn = document.getElementById('certSpin');
+  var wrap = document.getElementById('journeyCharacter');
+
+  if(!dieBtn || !fightBtn || !spinBtn || !wrap) return;
+
+  var actionToken = 0;
+
+  function resetCharacter(){
+    var model = window.cert3DCharacter;
+    if(!model) return;
+
+    actionToken++;
+    window.cert3DState = 'idle';
+
+    if(typeof gsap !== 'undefined'){
+      gsap.killTweensOf(model);
+      gsap.to(model, {
+        duration:.65,
+        x:0, y:0, z:0,
+        rotationX:0,
+        rotationY:-0.22,
+        rotationZ:-0.035,
+        scaleX:window.certOriginalScale || model.scale.x,
+        scaleY:window.certOriginalScale || model.scale.y,
+        scaleZ:window.certOriginalScale || model.scale.z,
+        opacity:1,
+        ease:'back.out(1.5)'
+      });
+    }
+    model.visible = true;
+    model.traverse(function(o){
+      if(o.material){
+        o.material.transparent = false;
+        o.material.opacity = 1;
+      }
+    });
+  }
+
+  function runDie(){
+    var model = window.cert3DCharacter;
+    if(!model || typeof gsap === 'undefined') return;
+    var token = ++actionToken;
+    window.cert3DState = 'die';
+    gsap.killTweensOf(model);
+
+    gsap.timeline()
+      .to(model,{
+        duration:.28,
+        y:-.10,
+        rotationZ:-0.18,
+        ease:'power2.in'
+      })
+      .to(model,{
+        duration:.65,
+        y:-.20,
+        rotationZ:-1.48,
+        rotationX:.18,
+        scaleX:.84, scaleY:.84, scaleZ:.84,
+        ease:'power3.in'
+      })
+      .to(model,{
+        duration:.45,
+        scaleX:.05, scaleY:.05, scaleZ:.05,
+        opacity:0,
+        ease:'power2.in',
+        onComplete:function(){
+          if(token !== actionToken) return;
+          model.visible = false;
+        }
+      });
+  }
+
+  function runFight(){
+    var model = window.cert3DCharacter;
+    if(!model || typeof gsap === 'undefined') return;
+    var token = ++actionToken;
+    window.cert3DState = 'fight';
+    model.visible = true;
+    gsap.killTweensOf(model);
+
+    gsap.timeline({
+      onComplete:function(){
+        if(token === actionToken) window.cert3DState = 'idle';
+      }
+    })
+    .set(model,{opacity:1})
+    .to(model,{duration:.10,x:-.10,rotationZ:-.12,ease:'power1.out'})
+    .to(model,{duration:.10,x:.12,rotationZ:.12,ease:'power1.out'})
+    .to(model,{duration:.10,x:-.12,rotationZ:-.12,ease:'power1.out'})
+    .to(model,{duration:.10,x:.12,rotationZ:.12,ease:'power1.out'})
+    .to(model,{duration:.10,x:-.08,rotationZ:-.08,ease:'power1.out'})
+    .to(model,{duration:.10,x:0,rotationZ:-.035,ease:'power1.out'})
+    .to(model,{duration:.18,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
+    .to(model,{duration:.18,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
+    .to(model,{duration:.18,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
+    .to(model,{duration:.18,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'});
+  }
+
+  function runSpin(){
+    var model = window.cert3DCharacter;
+    if(!model || typeof gsap === 'undefined') return;
+    var token = ++actionToken;
+    window.cert3DState = 'spin';
+    model.visible = true;
+    gsap.killTweensOf(model);
+
+    gsap.timeline({
+      onComplete:function(){
+        if(token === actionToken) window.cert3DState = 'idle';
+      }
+    })
+    .set(model,{opacity:1})
+    .to(model,{
+      duration:1.25,
+      rotationY:model.rotation.y + Math.PI * 2,
+      ease:'power2.inOut'
+    })
+    .to(model,{
+      duration:.35,
+      rotationZ:-0.035,
+      y:0,
+      ease:'power2.out'
+    });
+  }
+
+  /* Wait until the GLB has finished loading, then remember its base scale. */
+  var waitForModel = setInterval(function(){
+    var model = window.cert3DCharacter;
+    if(model){
+      window.certOriginalScale = model.scale.x;
+      clearInterval(waitForModel);
+    }
+  },100);
+
+  dieBtn.addEventListener('click', runDie);
+  fightBtn.addEventListener('click', runFight);
+  spinBtn.addEventListener('click', runSpin);
+
+  /* Clicking the dead character's area restores it. */
+  wrap.addEventListener('dblclick', resetCharacter);
 })();
 </script>
 
