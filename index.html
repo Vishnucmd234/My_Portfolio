@@ -11,15 +11,15 @@
   :root{
     --navy:#0B1220;
     --navy-2:#111B2E;
-    --panel:#FFFFFF;
-    --paper:#F5F7FB;
-    --ink:#0B1220;
-    --muted:#5B6577;
+    --panel:#111B2E;
+    --paper:#0B1220;
+    --ink:#F4F7FC;
+    --muted:#AEB8D0;
     --violet:#6C5CE7;
     --teal:#00C9A7;
     --coral:#FF6B6B;
     --amber:#FFC145;
-    --line:#E4E8F0;
+    --line:#26324A;
     --line-dark:#26324A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -317,36 +317,60 @@
   .project-link:hover{text-decoration:underline;}
 
   /* ---------- CERTS / ACHIEVEMENTS ---------- */
-  #journey{background:var(--panel);}
+  #journey{
+    background:
+      radial-gradient(circle at 78% 18%, rgba(108,92,231,.14), transparent 30%),
+      radial-gradient(circle at 18% 85%, rgba(0,201,167,.08), transparent 28%),
+      linear-gradient(135deg,#111B2E 0%,#0B1220 100%);
+    color:#F4F7FC;
+    overflow:hidden;
+  }
+  #about{
+    background:
+      radial-gradient(circle at 12% 18%, rgba(108,92,231,.10), transparent 28%),
+      linear-gradient(135deg,#111B2E 0%,#0B1220 100%);
+    color:#F4F7FC;
+  }
+  #projects{
+    background:
+      radial-gradient(circle at 88% 12%, rgba(0,201,167,.08), transparent 28%),
+      linear-gradient(135deg,#0B1220 0%,#111B2E 100%);
+    color:#F4F7FC;
+  }
+  .section-head h2,
+  #about h2,
+  #projects h2,
+  #journey h2,
+  .journey-col h3,
+  .timeline .t-title{color:#F4F7FC;}
+  .section-head p,
+  .about-text p,
+  .timeline .t-meta{color:#AEB8D0;}
   .journey-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px;}
   @media (max-width:800px){.journey-grid{grid-template-columns:1fr;}}
-  .journey-col h3{font-family:'JetBrains Mono',monospace; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:22px;}
+  .journey-col h3{font-family:'JetBrains Mono',monospace; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:#AEB8D0; margin-bottom:22px;}
   .timeline{list-style:none; position:relative; padding-left:24px;}
-  .timeline::before{content:"";position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--line);}
+  .timeline::before{content:"";position:absolute; left:0; top:0; bottom:0; width:2px; background:#26324A;}
   .timeline .rail{position:absolute; left:0; top:0; width:2px; background:linear-gradient(var(--violet),var(--teal)); height:0; transform-origin:top;}
   .timeline li{position:relative; padding-bottom:26px; opacity:0; will-change:transform;}
   .timeline li:last-child{padding-bottom:0;}
   .timeline li::before{
     content:""; position:absolute; left:-30px; top:4px; width:11px; height:11px; border-radius:50%;
-    background:var(--panel); border:2px solid var(--teal);
+    background:#111B2E; border:2px solid var(--teal);
   }
-  .timeline .t-title{font-weight:600; font-size:0.98rem;}
-  .timeline .t-meta{color:var(--muted); font-size:0.85rem; margin-top:3px;}
-
 
   /* ---------- 3D CERTIFICATION CHARACTER ---------- */
-  #journey{overflow:hidden;}
   .journey-character{
     position:absolute;
-    top:78px;
-    right:3vw;
-    width:min(360px,32vw);
-    height:min(360px,32vw);
-    z-index:0;
+    top:105px;
+    right:1vw;
+    width:min(300px,27vw);
+    height:min(300px,27vw);
+    z-index:1;
     pointer-events:none;
     opacity:0;
     transform:translateY(45px) scale(.88);
-    filter:drop-shadow(0 22px 30px rgba(0,0,0,.42));
+    filter:drop-shadow(0 22px 30px rgba(0,0,0,.55));
   }
   #certificate3d{
     width:100%;
@@ -358,17 +382,24 @@
     position:relative;
     z-index:2;
   }
+  @media (max-width:1000px){
+    .journey-character{
+      width:250px;
+      height:250px;
+      right:-8px;
+    }
+  }
   @media (max-width:800px){
     .journey-character{
-      width:230px;
-      height:230px;
-      top:110px;
-      right:-18px;
-      opacity:.28 !important;
+      width:190px;
+      height:190px;
+      top:145px;
+      right:-20px;
+      opacity:.22 !important;
     }
   }
   @media (prefers-reduced-motion: reduce){
-    .journey-character{opacity:.25 !important; transform:none !important;}
+    .journey-character{opacity:.18 !important; transform:none !important;}
   }
 
   /* ---------- CONTACT ---------- */
@@ -394,6 +425,29 @@
   .foot-marquee-track{display:inline-flex; will-change:transform;}
   .foot-marquee-track span{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:#3A4661; padding:0 20px; letter-spacing:0.02em;}
   .foot-bottom{padding:24px 6vw 32px; font-size:0.82rem;}
+
+  /* ---------- DARK SURFACE READABILITY ---------- */
+  body{
+    background:
+      radial-gradient(circle at 10% 10%,rgba(108,92,231,.10),transparent 28%),
+      linear-gradient(135deg,#0B1220,#111B2E 55%,#0B1220);
+    color:#F4F7FC;
+  }
+  .stat-card,.project-card,.skill-group,.contact-pill{
+    background:rgba(17,27,46,.92);
+    border-color:#26324A;
+  }
+  .stat-card .num,.project-card h3,.skill-group h3{color:#F4F7FC;}
+  .stat-card .label,.project-card .desc{color:#AEB8D0;}
+  .tag{
+    background:#0B1220;
+    border-color:#26324A;
+    color:#D5DBEA;
+  }
+  .project-card .desc{color:#AEB8D0;}
+  .about-text p{color:#C8D1E3;}
+  #about .kicker,#projects .kicker,#journey .kicker{color:var(--teal);}
+  #about .section-head p,#projects .section-head p{color:#AEB8D0;}
 
   .reveal{opacity:0; transform:translateY(24px); will-change:transform,opacity;}
 </style>
@@ -666,7 +720,7 @@
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(28, 1, 0.01, 100);
-  camera.position.set(0, 0.05, 2.25);
+  camera.position.set(0, 0.05, 2.75);
 
   var renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -676,7 +730,7 @@
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.setClearColor(0x000000, 0);
+  renderer.setClearColor(0x0B1220, 0);
 
   var root = new THREE.Group();
   scene.add(root);
@@ -717,7 +771,7 @@
     model.position.sub(center);
 
     var maxDim = Math.max(size.x, size.y, size.z);
-    targetScale = 1.35 / maxDim;
+    targetScale = 0.88 / maxDim;
     model.scale.setScalar(targetScale);
 
     /* Give the character a slightly tilted, friendly pose. */
@@ -746,9 +800,9 @@
 
     if(model){
       /* Slow floating + gentle side-to-side motion. */
-      model.position.y = Math.sin(t * 1.25) * 0.045;
-      model.rotation.y = -0.22 + Math.sin(t * 0.65) * 0.12;
-      model.rotation.z = -0.035 + Math.sin(t * 0.9) * 0.018;
+      model.position.y = Math.sin(t * 1.05) * 0.025;
+      model.rotation.y = -0.22 + Math.sin(t * 0.55) * 0.07;
+      model.rotation.z = -0.035 + Math.sin(t * 0.8) * 0.010;
     }
 
     renderer.render(scene, camera);
