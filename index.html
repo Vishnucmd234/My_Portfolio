@@ -359,47 +359,143 @@
     background:#111B2E; border:2px solid var(--teal);
   }
 
-  /* ---------- 3D CERTIFICATION CHARACTER ---------- */
-  .journey-character{
-    position:absolute;
-    top:105px;
-    right:1vw;
-    width:min(300px,27vw);
-    height:min(300px,27vw);
-    z-index:1;
-    pointer-events:none;
-    opacity:0;
-    transform:translateY(45px) scale(.88);
-    filter:drop-shadow(0 22px 30px rgba(0,0,0,.55));
+  /* ---------- CERTIFICATION 3D + ROLLING BACKGROUND OBJECTS ---------- */
+  #journey{
+    overflow:hidden;
+    isolation:isolate;
+    background:
+      radial-gradient(circle at 18% 35%, rgba(108,92,231,.12), transparent 30%),
+      radial-gradient(circle at 82% 65%, rgba(0,201,167,.10), transparent 32%),
+      linear-gradient(135deg,#0B1220 0%,#111B2E 55%,#0B1220 100%);
   }
+
+  .journey-motion-lane{
+    position:absolute;
+    left:0;
+    right:0;
+    bottom:18px;
+    height:112px;
+    overflow:hidden;
+    z-index:0;
+    pointer-events:none;
+  }
+
+  .roll-item{
+    position:absolute;
+    top:8px;
+    left:0;
+    width:96px;
+    height:96px;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transform:
+      translate3d(var(--x, -140px), 0, 0)
+      rotate(var(--r, 0deg))
+      scale(var(--s, 1));
+    transform-origin:center;
+    will-change:transform, filter;
+    transition:
+      --s .25s ease,
+      filter .25s ease;
+    pointer-events:auto;
+    cursor:pointer;
+  }
+
+  .roll-item:hover{
+    --s:1.38;
+    filter:
+      drop-shadow(0 0 10px rgba(0,201,167,.85))
+      drop-shadow(0 0 24px rgba(108,92,231,.65));
+    z-index:5;
+  }
+
+  /* All three objects use the same 96px outer size. */
+  .roll-star span{
+    width:76px;
+    height:76px;
+    display:grid;
+    place-items:center;
+    color:#FFC145;
+    font-size:76px;
+    line-height:1;
+    text-shadow:
+      0 0 8px rgba(255,193,69,.75),
+      0 0 24px rgba(255,193,69,.45);
+  }
+
+  .roll-circle span{
+    width:76px;
+    height:76px;
+    display:block;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 32% 28%, #ffffff 0 7%, #8FE3CE 18%, #00C9A7 52%, #6C5CE7 100%);
+    border:2px solid rgba(255,255,255,.72);
+    box-shadow:
+      inset -10px -12px 20px rgba(11,18,32,.30),
+      0 0 12px rgba(0,201,167,.65),
+      0 0 26px rgba(108,92,231,.35);
+  }
+
+  .roll-character{
+    overflow:visible;
+    filter:drop-shadow(0 12px 18px rgba(0,0,0,.45));
+  }
+
   #certificate3d{
     width:100%;
     height:100%;
     display:block;
   }
+
   .journey-grid,
   #journey > .section-head{
     position:relative;
     z-index:2;
   }
-  @media (max-width:1000px){
-    .journey-character{
-      width:250px;
-      height:250px;
-      right:-8px;
+
+  #journey .journey-col,
+  #journey .timeline{
+    position:relative;
+    z-index:3;
+  }
+
+  @media (hover:hover) and (pointer:fine){
+    .roll-item:hover .roll-star span{
+      text-shadow:
+        0 0 12px rgba(255,193,69,1),
+        0 0 34px rgba(255,193,69,.85);
+    }
+    .roll-item:hover .roll-circle span{
+      box-shadow:
+        inset -10px -12px 20px rgba(11,18,32,.22),
+        0 0 18px rgba(0,201,167,1),
+        0 0 38px rgba(108,92,231,.8);
     }
   }
+
   @media (max-width:800px){
-    .journey-character{
-      width:190px;
-      height:190px;
-      top:145px;
-      right:-20px;
-      opacity:.22 !important;
+    .journey-motion-lane{
+      bottom:12px;
+      height:90px;
+      opacity:.72;
     }
+    .roll-item{
+      width:76px;
+      height:76px;
+      top:7px;
+    }
+    .roll-star span,
+    .roll-circle span{
+      width:60px;
+      height:60px;
+    }
+    .roll-star span{font-size:60px;}
   }
+
   @media (prefers-reduced-motion: reduce){
-    .journey-character{opacity:.18 !important; transform:none !important;}
+    .journey-motion-lane{display:none;}
   }
 
   /* ---------- CONTACT ---------- */
@@ -660,8 +756,12 @@
 </section>
 
 <section id="journey">
-  <div class="journey-character" id="journeyCharacter" aria-hidden="true">
-    <canvas id="certificate3d"></canvas>
+  <div class="journey-motion-lane" id="journeyMotionLane" aria-hidden="true">
+    <div class="roll-item roll-character" id="journeyCharacter">
+      <canvas id="certificate3d"></canvas>
+    </div>
+    <div class="roll-item roll-star" id="journeyStar"><span>★</span></div>
+    <div class="roll-item roll-circle" id="journeyCircle"><span></span></div>
   </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
@@ -808,28 +908,76 @@
     renderer.render(scene, camera);
   }
 
-  /* Reveal when the Certifications section enters the viewport. */
-  var observer = new IntersectionObserver(function(entries){
-    entries.forEach(function(entry){
-      if(entry.isIntersecting){
-        wrap.style.opacity = window.matchMedia('(max-width:800px)').matches ? '.28' : '1';
-        if(typeof gsap !== 'undefined'){
-          gsap.to(wrap, {
-            opacity: window.matchMedia('(max-width:800px)').matches ? .28 : 1,
-            y: 0,
-            scale: 1,
-            duration: 1.25,
-            ease: 'back.out(1.25)'
-          });
-        } else {
-          wrap.style.opacity = window.matchMedia('(max-width:800px)').matches ? '.28' : '1';
-          wrap.style.transform = 'translateY(0) scale(1)';
-        }
-        observer.disconnect();
+  /* Keep the character visible as one of the three rolling objects. */
+  wrap.style.opacity = '1';
+})();
+</script>
+
+<script>
+/* ---------- ROLLING CERTIFICATION BACKGROUND OBJECTS ---------- */
+(function(){
+  var lane = document.getElementById('journeyMotionLane');
+  var journey = document.getElementById('journey');
+  var items = [
+    document.getElementById('journeyCharacter'),
+    document.getElementById('journeyStar'),
+    document.getElementById('journeyCircle')
+  ].filter(Boolean);
+
+  if(!lane || !journey || items.length !== 3) return;
+
+  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if(reduced) return;
+
+  var speed = 92; // px/sec
+  var gap = 190;
+  var positions = [-120, -310, -500];
+  var rotations = [0, 120, 240];
+  var last = performance.now();
+  var active = true;
+
+  function frame(now){
+    if(!active) return;
+    var dt = Math.min((now-last)/1000, .04);
+    last = now;
+
+    var width = lane.clientWidth || window.innerWidth;
+    items.forEach(function(item, i){
+      positions[i] += speed * dt;
+      rotations[i] += speed * dt * 0.9;
+
+      if(positions[i] > width + 120){
+        positions[i] -= (width + 120 + gap);
       }
+
+      item.style.setProperty('--x', positions[i] + 'px');
+      item.style.setProperty('--r', rotations[i] + 'deg');
     });
-  }, {threshold:0.18});
-  observer.observe(document.getElementById('journey'));
+
+    requestAnimationFrame(frame);
+  }
+
+  /* Pause when the section is far outside the viewport. */
+  var observer = new IntersectionObserver(function(entries){
+    var visible = entries.some(function(e){ return e.isIntersecting; });
+    active = visible;
+    if(active){
+      last = performance.now();
+      requestAnimationFrame(frame);
+    }
+  }, {rootMargin:'180px 0px', threshold:0});
+
+  observer.observe(journey);
+  requestAnimationFrame(frame);
+
+  items.forEach(function(item){
+    item.addEventListener('pointerenter', function(){
+      item.style.setProperty('--s','1.38');
+    });
+    item.addEventListener('pointerleave', function(){
+      item.style.setProperty('--s','1');
+    });
+  });
 })();
 </script>
 
