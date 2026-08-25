@@ -520,21 +520,26 @@
   .cert-bg-visual{
     position:absolute;
     z-index:1;
-    top:8%;
-    right:2%;
-    width:min(58vw,760px);
-    height:82%;
+    top:10%;
+    left:50%;
+    width:min(42vw,540px);
+    height:76%;
+    transform:translateX(-50%);
     pointer-events:none;
   }
 
   .cert-character-wrap{
     position:absolute;
-    inset:7% 2% 4% 2%;
+    left:50%;
+    top:50%;
+    width:72%;
+    height:72%;
+    transform:translate(-50%,-50%);
     display:flex;
     align-items:center;
     justify-content:center;
     overflow:visible;
-    filter:drop-shadow(0 28px 35px rgba(0,0,0,.42));
+    filter:drop-shadow(0 22px 28px rgba(0,0,0,.42));
     transform-origin:center;
     pointer-events:none;
   }
@@ -542,6 +547,8 @@
   #certificate3d{
     width:100%;
     height:100%;
+    max-width:100%;
+    max-height:100%;
     display:block;
     overflow:visible;
   }
@@ -549,7 +556,7 @@
   .cert-orbit-ring{
     position:absolute;
     left:50%;
-    top:57%;
+    top:50%;
     width:min(92%,620px);
     aspect-ratio:1.65 / 1;
     transform:translate(-50%,-50%) rotate(-9deg);
@@ -657,10 +664,12 @@
   @media (max-width:1000px){
     #journey{min-height:820px;}
     .cert-bg-visual{
-      right:-4%;
-      width:68vw;
+      left:50%;
+      right:auto;
+      width:52vw;
       height:62%;
       top:27%;
+      transform:translateX(-50%);
       opacity:.86;
     }
     .cert-character-controls{
@@ -673,10 +682,12 @@
   @media (max-width:800px){
     #journey{min-height:980px;}
     .cert-bg-visual{
-      top:34%;
-      right:0;
-      width:100%;
-      height:48%;
+      top:38%;
+      left:50%;
+      right:auto;
+      width:82%;
+      height:42%;
+      transform:translateX(-50%);
       opacity:.55;
     }
     .cert-character-controls{
@@ -1077,15 +1088,11 @@
     model.rotation.y = -0.22;
     model.rotation.z = -0.035;
 
-    /* Play the uploaded GLB's built-in movement animation. */
+    /* Keep the character static. The uploaded GLB's built-in clip
+       is intentionally not played because it repeatedly contains
+       the falling/death movement. */
     window.certAnimationMixer = null;
-    if(gltf.animations && gltf.animations.length){
-      window.certAnimationMixer = new THREE.AnimationMixer(model);
-      var movementClip = gltf.animations.find(function(a){ return a.name === 'movement'; }) || gltf.animations[0];
-      var movementAction = window.certAnimationMixer.clipAction(movementClip);
-      movementAction.play();
-      window.certMovementAction = movementAction;
-    }
+    window.certMovementAction = null;
 
     window.cert3DCharacter = model;
     window.cert3DRoot = root;
@@ -1117,11 +1124,12 @@
       window.certAnimationMixer.update(delta);
     }
 
-    if(model && window.cert3DState === 'idle'){
-      /* Gentle background floating while the character is idle. */
-      model.position.y = Math.sin(t * 1.15) * 0.025;
-      model.rotation.y = -0.22 + Math.sin(t * 0.55) * 0.055;
-      model.rotation.z = -0.035 + Math.sin(t * 0.8) * 0.008;
+    if(model){
+      /* Keep the character stable in the center; no falling/death motion. */
+      model.position.y = 0;
+      model.rotation.x = 0;
+      model.rotation.y = -0.22;
+      model.rotation.z = -0.035;
     }
 
     renderer.render(scene, camera);
