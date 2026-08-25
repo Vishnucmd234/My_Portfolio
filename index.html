@@ -531,13 +531,13 @@
     width:min(92%,650px);
     aspect-ratio:1.65 / 1;
     transform:translate(-50%,-50%) rotate(-9deg);
-    border:2px solid rgba(108,92,231,.72);
+    border:1.5px solid rgba(108,92,231,.42);
     border-radius:50%;
     box-shadow:
-      0 0 10px rgba(108,92,231,.75),
-      0 0 30px rgba(0,201,167,.24),
-      inset 0 0 18px rgba(108,92,231,.20);
-    opacity:.95;
+      0 0 7px rgba(108,92,231,.42),
+      0 0 18px rgba(0,201,167,.12),
+      inset 0 0 10px rgba(108,92,231,.10);
+    opacity:.72;
     animation:certRingPulse 3.5s ease-in-out infinite;
   }
 
@@ -565,6 +565,37 @@
     height:7px;
     right:10%;
     bottom:17%;
+  }
+
+  /* Additional small stars around the ring */
+  .cert-orbit-ring{
+    --star-glow:rgba(255,255,255,.78);
+  }
+
+  .cert-orbit-ring .ring-star{
+    position:absolute;
+    width:5px;
+    height:5px;
+    border-radius:50%;
+    background:rgba(255,255,255,.88);
+    box-shadow:0 0 6px var(--star-glow),0 0 14px rgba(0,201,167,.35);
+    animation:ringStarTwinkle 2.8s ease-in-out infinite;
+  }
+
+  .cert-orbit-ring .ring-star:nth-child(1){left:28%;top:5%;animation-delay:.2s;}
+  .cert-orbit-ring .ring-star:nth-child(2){left:53%;top:1%;animation-delay:1.1s;}
+  .cert-orbit-ring .ring-star:nth-child(3){right:19%;top:18%;animation-delay:1.7s;}
+  .cert-orbit-ring .ring-star:nth-child(4){right:4%;top:50%;animation-delay:.7s;}
+  .cert-orbit-ring .ring-star:nth-child(5){right:22%;bottom:7%;animation-delay:2.1s;}
+  .cert-orbit-ring .ring-star:nth-child(6){left:47%;bottom:1%;animation-delay:1.4s;}
+  .cert-orbit-ring .ring-star:nth-child(7){left:19%;bottom:9%;animation-delay:.5s;}
+  .cert-orbit-ring .ring-star:nth-child(8){left:4%;top:48%;animation-delay:2.3s;}
+  .cert-orbit-ring .ring-star:nth-child(9){left:13%;top:23%;animation-delay:1.8s;}
+  .cert-orbit-ring .ring-star:nth-child(10){right:34%;top:6%;animation-delay:.9s;}
+
+  @keyframes ringStarTwinkle{
+    0%,100%{transform:scale(.65);opacity:.42;}
+    50%{transform:scale(1.35);opacity:.95;}
   }
 
   @keyframes certRingPulse{
@@ -856,7 +887,13 @@
 
 <section id="journey">
   <div class="cert-bg-visual" aria-hidden="true">
-    <div class="cert-orbit-ring" id="journeyCircle"></div>
+    <div class="cert-orbit-ring" id="journeyCircle">
+      <span class="ring-star"></span><span class="ring-star"></span>
+      <span class="ring-star"></span><span class="ring-star"></span>
+      <span class="ring-star"></span><span class="ring-star"></span>
+      <span class="ring-star"></span><span class="ring-star"></span>
+      <span class="ring-star"></span><span class="ring-star"></span>
+    </div>
 </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
