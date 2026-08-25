@@ -11,15 +11,15 @@
   :root{
     --navy:#0B1220;
     --navy-2:#111B2E;
-    --panel:#111B2E;
-    --paper:#0B1220;
-    --ink:#F4F7FC;
-    --muted:#AEB8D0;
+    --panel:#FFFFFF;
+    --paper:#F5F7FB;
+    --ink:#0B1220;
+    --muted:#5B6577;
     --violet:#6C5CE7;
     --teal:#00C9A7;
     --coral:#FF6B6B;
     --amber:#FFC145;
-    --line:#26324A;
+    --line:#E4E8F0;
     --line-dark:#26324A;
   }
   *{margin:0;padding:0;box-sizing:border-box;}
@@ -317,185 +317,58 @@
   .project-link:hover{text-decoration:underline;}
 
   /* ---------- CERTS / ACHIEVEMENTS ---------- */
-  #journey{
-    background:
-      radial-gradient(circle at 78% 18%, rgba(108,92,231,.14), transparent 30%),
-      radial-gradient(circle at 18% 85%, rgba(0,201,167,.08), transparent 28%),
-      linear-gradient(135deg,#111B2E 0%,#0B1220 100%);
-    color:#F4F7FC;
-    overflow:hidden;
-  }
-  #about{
-    background:
-      radial-gradient(circle at 12% 18%, rgba(108,92,231,.10), transparent 28%),
-      linear-gradient(135deg,#111B2E 0%,#0B1220 100%);
-    color:#F4F7FC;
-  }
-  #projects{
-    background:
-      radial-gradient(circle at 88% 12%, rgba(0,201,167,.08), transparent 28%),
-      linear-gradient(135deg,#0B1220 0%,#111B2E 100%);
-    color:#F4F7FC;
-  }
-  .section-head h2,
-  #about h2,
-  #projects h2,
-  #journey h2,
-  .journey-col h3,
-  .timeline .t-title{color:#F4F7FC;}
-  .section-head p,
-  .about-text p,
-  .timeline .t-meta{color:#AEB8D0;}
+  #journey{background:var(--panel);}
   .journey-grid{display:grid; grid-template-columns:1fr 1fr; gap:48px;}
   @media (max-width:800px){.journey-grid{grid-template-columns:1fr;}}
-  .journey-col h3{font-family:'JetBrains Mono',monospace; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:#AEB8D0; margin-bottom:22px;}
+  .journey-col h3{font-family:'JetBrains Mono',monospace; font-size:0.85rem; text-transform:uppercase; letter-spacing:0.06em; color:var(--muted); margin-bottom:22px;}
   .timeline{list-style:none; position:relative; padding-left:24px;}
-  .timeline::before{content:"";position:absolute; left:0; top:0; bottom:0; width:2px; background:#26324A;}
+  .timeline::before{content:"";position:absolute; left:0; top:0; bottom:0; width:2px; background:var(--line);}
   .timeline .rail{position:absolute; left:0; top:0; width:2px; background:linear-gradient(var(--violet),var(--teal)); height:0; transform-origin:top;}
   .timeline li{position:relative; padding-bottom:26px; opacity:0; will-change:transform;}
   .timeline li:last-child{padding-bottom:0;}
   .timeline li::before{
     content:""; position:absolute; left:-30px; top:4px; width:11px; height:11px; border-radius:50%;
-    background:#111B2E; border:2px solid var(--teal);
+    background:var(--panel); border:2px solid var(--teal);
   }
+  .timeline .t-title{font-weight:600; font-size:0.98rem;}
+  .timeline .t-meta{color:var(--muted); font-size:0.85rem; margin-top:3px;}
 
-  /* ---------- CERTIFICATION 3D + ROLLING BACKGROUND OBJECTS ---------- */
-  #journey{
-    overflow:hidden;
-    isolation:isolate;
-    background:
-      radial-gradient(circle at 18% 35%, rgba(108,92,231,.12), transparent 30%),
-      radial-gradient(circle at 82% 65%, rgba(0,201,167,.10), transparent 32%),
-      linear-gradient(135deg,#0B1220 0%,#111B2E 55%,#0B1220 100%);
-  }
 
-  .journey-motion-lane{
+  /* ---------- 3D CERTIFICATION CHARACTER ---------- */
+  #journey{overflow:hidden;}
+  .journey-character{
     position:absolute;
-    left:0;
-    right:0;
-    bottom:18px;
-    height:112px;
-    overflow:hidden;
+    top:78px;
+    right:3vw;
+    width:min(360px,32vw);
+    height:min(360px,32vw);
     z-index:0;
     pointer-events:none;
+    opacity:0;
+    transform:translateY(45px) scale(.88);
+    filter:drop-shadow(0 22px 30px rgba(0,0,0,.42));
   }
-
-  .roll-item{
-    position:absolute;
-    top:8px;
-    left:0;
-    width:96px;
-    height:96px;
-    display:flex;
-    align-items:center;
-    justify-content:center;
-    transform:
-      translate3d(var(--x, -140px), 0, 0)
-      rotate(var(--r, 0deg))
-      scale(var(--s, 1));
-    transform-origin:center;
-    will-change:transform, filter;
-    transition:
-      --s .25s ease,
-      filter .25s ease;
-    pointer-events:auto;
-    cursor:pointer;
-  }
-
-  .roll-item:hover{
-    --s:1.38;
-    filter:
-      drop-shadow(0 0 10px rgba(0,201,167,.85))
-      drop-shadow(0 0 24px rgba(108,92,231,.65));
-    z-index:5;
-  }
-
-  /* All three objects use the same 96px outer size. */
-  .roll-star span{
-    width:76px;
-    height:76px;
-    display:grid;
-    place-items:center;
-    color:#FFC145;
-    font-size:76px;
-    line-height:1;
-    text-shadow:
-      0 0 8px rgba(255,193,69,.75),
-      0 0 24px rgba(255,193,69,.45);
-  }
-
-  .roll-circle span{
-    width:76px;
-    height:76px;
-    display:block;
-    border-radius:50%;
-    background:
-      radial-gradient(circle at 32% 28%, #ffffff 0 7%, #8FE3CE 18%, #00C9A7 52%, #6C5CE7 100%);
-    border:2px solid rgba(255,255,255,.72);
-    box-shadow:
-      inset -10px -12px 20px rgba(11,18,32,.30),
-      0 0 12px rgba(0,201,167,.65),
-      0 0 26px rgba(108,92,231,.35);
-  }
-
-  .roll-character{
-    overflow:visible;
-    filter:drop-shadow(0 12px 18px rgba(0,0,0,.45));
-  }
-
   #certificate3d{
     width:100%;
     height:100%;
     display:block;
   }
-
   .journey-grid,
   #journey > .section-head{
     position:relative;
     z-index:2;
   }
-
-  #journey .journey-col,
-  #journey .timeline{
-    position:relative;
-    z-index:3;
-  }
-
-  @media (hover:hover) and (pointer:fine){
-    .roll-item:hover .roll-star span{
-      text-shadow:
-        0 0 12px rgba(255,193,69,1),
-        0 0 34px rgba(255,193,69,.85);
-    }
-    .roll-item:hover .roll-circle span{
-      box-shadow:
-        inset -10px -12px 20px rgba(11,18,32,.22),
-        0 0 18px rgba(0,201,167,1),
-        0 0 38px rgba(108,92,231,.8);
-    }
-  }
-
   @media (max-width:800px){
-    .journey-motion-lane{
-      bottom:12px;
-      height:90px;
-      opacity:.72;
+    .journey-character{
+      width:230px;
+      height:230px;
+      top:110px;
+      right:-18px;
+      opacity:.28 !important;
     }
-    .roll-item{
-      width:76px;
-      height:76px;
-      top:7px;
-    }
-    .roll-star span,
-    .roll-circle span{
-      width:60px;
-      height:60px;
-    }
-    .roll-star span{font-size:60px;}
   }
-
   @media (prefers-reduced-motion: reduce){
-    .journey-motion-lane{display:none;}
+    .journey-character{opacity:.25 !important; transform:none !important;}
   }
 
   /* ---------- CONTACT ---------- */
@@ -521,29 +394,6 @@
   .foot-marquee-track{display:inline-flex; will-change:transform;}
   .foot-marquee-track span{font-family:'Space Grotesk',sans-serif; font-weight:700; font-size:1rem; color:#3A4661; padding:0 20px; letter-spacing:0.02em;}
   .foot-bottom{padding:24px 6vw 32px; font-size:0.82rem;}
-
-  /* ---------- DARK SURFACE READABILITY ---------- */
-  body{
-    background:
-      radial-gradient(circle at 10% 10%,rgba(108,92,231,.10),transparent 28%),
-      linear-gradient(135deg,#0B1220,#111B2E 55%,#0B1220);
-    color:#F4F7FC;
-  }
-  .stat-card,.project-card,.skill-group,.contact-pill{
-    background:rgba(17,27,46,.92);
-    border-color:#26324A;
-  }
-  .stat-card .num,.project-card h3,.skill-group h3{color:#F4F7FC;}
-  .stat-card .label,.project-card .desc{color:#AEB8D0;}
-  .tag{
-    background:#0B1220;
-    border-color:#26324A;
-    color:#D5DBEA;
-  }
-  .project-card .desc{color:#AEB8D0;}
-  .about-text p{color:#C8D1E3;}
-  #about .kicker,#projects .kicker,#journey .kicker{color:var(--teal);}
-  #about .section-head p,#projects .section-head p{color:#AEB8D0;}
 
   .reveal{opacity:0; transform:translateY(24px); will-change:transform,opacity;}
 </style>
@@ -756,12 +606,8 @@
 </section>
 
 <section id="journey">
-  <div class="journey-motion-lane" id="journeyMotionLane" aria-hidden="true">
-    <div class="roll-item roll-character" id="journeyCharacter">
-      <canvas id="certificate3d"></canvas>
-    </div>
-    <div class="roll-item roll-star" id="journeyStar"><span>★</span></div>
-    <div class="roll-item roll-circle" id="journeyCircle"><span></span></div>
+  <div class="journey-character" id="journeyCharacter" aria-hidden="true">
+    <canvas id="certificate3d"></canvas>
   </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
@@ -820,7 +666,7 @@
 
   var scene = new THREE.Scene();
   var camera = new THREE.PerspectiveCamera(28, 1, 0.01, 100);
-  camera.position.set(0, 0.05, 2.75);
+  camera.position.set(0, 0.05, 2.25);
 
   var renderer = new THREE.WebGLRenderer({
     canvas: canvas,
@@ -830,7 +676,7 @@
   });
   renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, 2));
   renderer.outputEncoding = THREE.sRGBEncoding;
-  renderer.setClearColor(0x0B1220, 0);
+  renderer.setClearColor(0x000000, 0);
 
   var root = new THREE.Group();
   scene.add(root);
@@ -871,7 +717,7 @@
     model.position.sub(center);
 
     var maxDim = Math.max(size.x, size.y, size.z);
-    targetScale = 0.88 / maxDim;
+    targetScale = 1.35 / maxDim;
     model.scale.setScalar(targetScale);
 
     /* Give the character a slightly tilted, friendly pose. */
@@ -900,84 +746,36 @@
 
     if(model){
       /* Slow floating + gentle side-to-side motion. */
-      model.position.y = Math.sin(t * 1.05) * 0.025;
-      model.rotation.y = -0.22 + Math.sin(t * 0.55) * 0.07;
-      model.rotation.z = -0.035 + Math.sin(t * 0.8) * 0.010;
+      model.position.y = Math.sin(t * 1.25) * 0.045;
+      model.rotation.y = -0.22 + Math.sin(t * 0.65) * 0.12;
+      model.rotation.z = -0.035 + Math.sin(t * 0.9) * 0.018;
     }
 
     renderer.render(scene, camera);
   }
 
-  /* Keep the character visible as one of the three rolling objects. */
-  wrap.style.opacity = '1';
-})();
-</script>
-
-<script>
-/* ---------- ROLLING CERTIFICATION BACKGROUND OBJECTS ---------- */
-(function(){
-  var lane = document.getElementById('journeyMotionLane');
-  var journey = document.getElementById('journey');
-  var items = [
-    document.getElementById('journeyCharacter'),
-    document.getElementById('journeyStar'),
-    document.getElementById('journeyCircle')
-  ].filter(Boolean);
-
-  if(!lane || !journey || items.length !== 3) return;
-
-  var reduced = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if(reduced) return;
-
-  var speed = 92; // px/sec
-  var gap = 190;
-  var positions = [-120, -310, -500];
-  var rotations = [0, 120, 240];
-  var last = performance.now();
-  var active = true;
-
-  function frame(now){
-    if(!active) return;
-    var dt = Math.min((now-last)/1000, .04);
-    last = now;
-
-    var width = lane.clientWidth || window.innerWidth;
-    items.forEach(function(item, i){
-      positions[i] += speed * dt;
-      rotations[i] += speed * dt * 0.9;
-
-      if(positions[i] > width + 120){
-        positions[i] -= (width + 120 + gap);
-      }
-
-      item.style.setProperty('--x', positions[i] + 'px');
-      item.style.setProperty('--r', rotations[i] + 'deg');
-    });
-
-    requestAnimationFrame(frame);
-  }
-
-  /* Pause when the section is far outside the viewport. */
+  /* Reveal when the Certifications section enters the viewport. */
   var observer = new IntersectionObserver(function(entries){
-    var visible = entries.some(function(e){ return e.isIntersecting; });
-    active = visible;
-    if(active){
-      last = performance.now();
-      requestAnimationFrame(frame);
-    }
-  }, {rootMargin:'180px 0px', threshold:0});
-
-  observer.observe(journey);
-  requestAnimationFrame(frame);
-
-  items.forEach(function(item){
-    item.addEventListener('pointerenter', function(){
-      item.style.setProperty('--s','1.38');
+    entries.forEach(function(entry){
+      if(entry.isIntersecting){
+        wrap.style.opacity = window.matchMedia('(max-width:800px)').matches ? '.28' : '1';
+        if(typeof gsap !== 'undefined'){
+          gsap.to(wrap, {
+            opacity: window.matchMedia('(max-width:800px)').matches ? .28 : 1,
+            y: 0,
+            scale: 1,
+            duration: 1.25,
+            ease: 'back.out(1.25)'
+          });
+        } else {
+          wrap.style.opacity = window.matchMedia('(max-width:800px)').matches ? '.28' : '1';
+          wrap.style.transform = 'translateY(0) scale(1)';
+        }
+        observer.disconnect();
+      }
     });
-    item.addEventListener('pointerleave', function(){
-      item.style.setProperty('--s','1');
-    });
-  });
+  }, {threshold:0.18});
+  observer.observe(document.getElementById('journey'));
 })();
 </script>
 
