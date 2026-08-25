@@ -620,7 +620,7 @@
     display:flex;
     flex-direction:column;
     gap:10px;
-    width:min(210px,22vw);
+    width:min(190px,22vw);
   }
 
   .cert-action{
@@ -651,9 +651,8 @@
   }
 
   .cert-action:active{transform:translateX(-2px) scale(.98);}
-  .cert-die:hover{border-color:#FF6B6B;box-shadow:0 0 20px rgba(255,107,107,.28);}
   .cert-fight:hover{border-color:#FFC145;box-shadow:0 0 20px rgba(255,193,69,.24);}
-  .cert-spin:hover{border-color:var(--teal);box-shadow:0 0 20px rgba(0,201,167,.25);}
+  .cert-stop:hover{border-color:#FF6B6B;box-shadow:0 0 20px rgba(255,107,107,.24);}
 
   @media (max-width:1000px){
     #journey{min-height:820px;}
@@ -667,7 +666,7 @@
     .cert-character-controls{
       top:13%;
       right:5vw;
-      width:190px;
+      width:175px;
     }
   }
 
@@ -965,9 +964,8 @@
   </div>
 
   <div class="cert-character-controls" aria-label="3D character controls">
-    <button type="button" class="cert-action cert-die" id="certDie">💀 Make Me Die</button>
-    <button type="button" class="cert-action cert-fight" id="certFight">⚔️ Make Me Fight</button>
-    <button type="button" class="cert-action cert-spin" id="certSpin">🌀 Make Me Spin</button>
+    <button type="button" class="cert-action cert-fight" id="certFight">⚔️ Fight</button>
+    <button type="button" class="cert-action cert-stop" id="certStop">⏹ Stop</button>
   </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
@@ -1409,150 +1407,94 @@
 
 
 <script>
-/* ---------- CERTIFICATION CHARACTER ACTION BUTTONS ---------- */
+/* ---------- CERTIFICATION CHARACTER FIGHT / STOP CONTROLS ---------- */
 (function(){
-  var dieBtn = document.getElementById('certDie');
   var fightBtn = document.getElementById('certFight');
-  var spinBtn = document.getElementById('certSpin');
-  var wrap = document.getElementById('journeyCharacter');
+  var stopBtn = document.getElementById('certStop');
 
-  if(!dieBtn || !fightBtn || !spinBtn || !wrap) return;
+  if(!fightBtn || !stopBtn) return;
 
-  var actionToken = 0;
+  var fightTimeline = null;
+  var fighting = false;
 
-  function resetCharacter(){
-    var model = window.cert3DCharacter;
-    if(!model) return;
+  function getModel(){
+    return window.cert3DCharacter || null;
+  }
 
-    actionToken++;
+  function stopFight(){
+    var model = getModel();
+    fighting = false;
     window.cert3DState = 'idle';
 
-    if(typeof gsap !== 'undefined'){
+    if(fightTimeline){
+      fightTimeline.kill();
+      fightTimeline = null;
+    }
+
+    if(model && typeof gsap !== 'undefined'){
       gsap.killTweensOf(model);
-      gsap.to(model, {
-        duration:.65,
-        x:0, y:0, z:0,
+
+      /* Return smoothly to the normal standing position.
+         The character is NEVER hidden, removed, or killed. */
+      gsap.to(model,{
+        duration:.28,
+        x:0,
+        y:0,
         rotationX:0,
-        rotationY:-0.22,
         rotationZ:-0.035,
         scaleX:window.certOriginalScale || model.scale.x,
         scaleY:window.certOriginalScale || model.scale.y,
         scaleZ:window.certOriginalScale || model.scale.z,
-        opacity:1,
-        ease:'back.out(1.5)'
+        ease:'power2.out'
       });
+
+      model.visible = true;
     }
-    model.visible = true;
-    model.traverse(function(o){
-      if(o.material){
-        o.material.transparent = false;
-        o.material.opacity = 1;
-      }
-    });
   }
 
-  function runDie(){
-    var model = window.cert3DCharacter;
+  function startFight(){
+    var model = getModel();
     if(!model || typeof gsap === 'undefined') return;
-    var token = ++actionToken;
-    window.cert3DState = 'die';
-    gsap.killTweensOf(model);
 
-    gsap.timeline()
-      .to(model,{
-        duration:.28,
-        y:-.10,
-        rotationZ:-0.18,
-        ease:'power2.in'
-      })
-      .to(model,{
-        duration:.65,
-        y:-.20,
-        rotationZ:-1.48,
-        rotationX:.18,
-        scaleX:.84, scaleY:.84, scaleZ:.84,
-        ease:'power3.in'
-      })
-      .to(model,{
-        duration:.45,
-        scaleX:.05, scaleY:.05, scaleZ:.05,
-        opacity:0,
-        ease:'power2.in',
-        onComplete:function(){
-          if(token !== actionToken) return;
-          model.visible = false;
-        }
-      });
-  }
+    /* If already fighting, don't create another loop. */
+    if(fighting) return;
 
-  function runFight(){
-    var model = window.cert3DCharacter;
-    if(!model || typeof gsap === 'undefined') return;
-    var token = ++actionToken;
+    fighting = true;
     window.cert3DState = 'fight';
-    model.visible = true;
-    gsap.killTweensOf(model);
 
-    gsap.timeline({
-      onComplete:function(){
-        if(token === actionToken) window.cert3DState = 'idle';
-      }
-    })
-    .set(model,{opacity:1})
-    .to(model,{duration:.10,x:-.10,rotationZ:-.12,ease:'power1.out'})
-    .to(model,{duration:.10,x:.12,rotationZ:.12,ease:'power1.out'})
-    .to(model,{duration:.10,x:-.12,rotationZ:-.12,ease:'power1.out'})
-    .to(model,{duration:.10,x:.12,rotationZ:.12,ease:'power1.out'})
-    .to(model,{duration:.10,x:-.08,rotationZ:-.08,ease:'power1.out'})
-    .to(model,{duration:.10,x:0,rotationZ:-.035,ease:'power1.out'})
-    .to(model,{duration:.18,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
-    .to(model,{duration:.18,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
-    .to(model,{duration:.18,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
-    .to(model,{duration:.18,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'});
-  }
-
-  function runSpin(){
-    var model = window.cert3DCharacter;
-    if(!model || typeof gsap === 'undefined') return;
-    var token = ++actionToken;
-    window.cert3DState = 'spin';
-    model.visible = true;
-    gsap.killTweensOf(model);
-
-    gsap.timeline({
-      onComplete:function(){
-        if(token === actionToken) window.cert3DState = 'idle';
-      }
-    })
-    .set(model,{opacity:1})
-    .to(model,{
-      duration:1.25,
-      rotationY:model.rotation.y + Math.PI * 2,
-      ease:'power2.inOut'
-    })
-    .to(model,{
-      duration:.35,
-      rotationZ:-0.035,
-      y:0,
-      ease:'power2.out'
-    });
-  }
-
-  /* Wait until the GLB has finished loading, then remember its base scale. */
-  var waitForModel = setInterval(function(){
-    var model = window.cert3DCharacter;
-    if(model){
-      window.certOriginalScale = model.scale.x;
-      clearInterval(waitForModel);
+    if(fightTimeline){
+      fightTimeline.kill();
     }
-  },100);
 
-  dieBtn.addEventListener('click', runDie);
-  fightBtn.addEventListener('click', runFight);
-  spinBtn.addEventListener('click', runSpin);
+    model.visible = true;
 
-  /* Clicking the dead character's area restores it. */
-  wrap.addEventListener('dblclick', resetCharacter);
+    /* Continuous fight loop. It keeps repeating until Stop is pressed. */
+    fightTimeline = gsap.timeline({
+      repeat:-1,
+      defaults:{ease:'power1.out'}
+    });
+
+    fightTimeline
+      .to(model,{duration:.10,x:-.10,rotationZ:-.12})
+      .to(model,{duration:.10,x:.12,rotationZ:.12})
+      .to(model,{duration:.10,x:-.12,rotationZ:-.12})
+      .to(model,{duration:.10,x:.12,rotationZ:.12})
+      .to(model,{duration:.10,x:-.08,rotationZ:-.08})
+      .to(model,{duration:.10,x:0,rotationZ:-.035})
+      .to(model,{duration:.16,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
+      .to(model,{duration:.16,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
+      .to(model,{duration:.16,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
+      .to(model,{duration:.16,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
+      .to(model,{duration:.08,x:-.06,rotationZ:-.07})
+      .to(model,{duration:.08,x:.06,rotationZ:.07})
+      .to(model,{duration:.08,x:0,rotationZ:-.035});
+  }
+
+  fightBtn.addEventListener('click', startFight);
+  stopBtn.addEventListener('click', stopFight);
+
+  /* Start only after the GLB has loaded; no automatic fighting is forced.
+     The character remains visible at all times. */
 })();
 </script>
 
