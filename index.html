@@ -962,11 +962,6 @@
       <span></span><span></span><span></span><span></span><span></span><span></span>
     </div>
   </div>
-
-  <div class="cert-character-controls" aria-label="3D character controls">
-    <button type="button" class="cert-action cert-fight" id="certFight">⚔️ Fight</button>
-    <button type="button" class="cert-action cert-stop" id="certStop">⏹ Stop</button>
-  </div>
   <div class="section-head reveal">
     <span class="kicker">Journey</span>
     <h2>Certifications &amp; milestones.</h2>
@@ -1406,97 +1401,7 @@
 </script>
 
 
-<script>
-/* ---------- CERTIFICATION CHARACTER FIGHT / STOP CONTROLS ---------- */
-(function(){
-  var fightBtn = document.getElementById('certFight');
-  var stopBtn = document.getElementById('certStop');
 
-  if(!fightBtn || !stopBtn) return;
-
-  var fightTimeline = null;
-  var fighting = false;
-
-  function getModel(){
-    return window.cert3DCharacter || null;
-  }
-
-  function stopFight(){
-    var model = getModel();
-    fighting = false;
-    window.cert3DState = 'idle';
-
-    if(fightTimeline){
-      fightTimeline.kill();
-      fightTimeline = null;
-    }
-
-    if(model && typeof gsap !== 'undefined'){
-      gsap.killTweensOf(model);
-
-      /* Return smoothly to the normal standing position.
-         The character is NEVER hidden, removed, or killed. */
-      gsap.to(model,{
-        duration:.28,
-        x:0,
-        y:0,
-        rotationX:0,
-        rotationZ:-0.035,
-        scaleX:window.certOriginalScale || model.scale.x,
-        scaleY:window.certOriginalScale || model.scale.y,
-        scaleZ:window.certOriginalScale || model.scale.z,
-        ease:'power2.out'
-      });
-
-      model.visible = true;
-    }
-  }
-
-  function startFight(){
-    var model = getModel();
-    if(!model || typeof gsap === 'undefined') return;
-
-    /* If already fighting, don't create another loop. */
-    if(fighting) return;
-
-    fighting = true;
-    window.cert3DState = 'fight';
-
-    if(fightTimeline){
-      fightTimeline.kill();
-    }
-
-    model.visible = true;
-
-    /* Continuous fight loop. It keeps repeating until Stop is pressed. */
-    fightTimeline = gsap.timeline({
-      repeat:-1,
-      defaults:{ease:'power1.out'}
-    });
-
-    fightTimeline
-      .to(model,{duration:.10,x:-.10,rotationZ:-.12})
-      .to(model,{duration:.10,x:.12,rotationZ:.12})
-      .to(model,{duration:.10,x:-.12,rotationZ:-.12})
-      .to(model,{duration:.10,x:.12,rotationZ:.12})
-      .to(model,{duration:.10,x:-.08,rotationZ:-.08})
-      .to(model,{duration:.10,x:0,rotationZ:-.035})
-      .to(model,{duration:.16,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
-      .to(model,{duration:.16,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
-      .to(model,{duration:.16,y:.08,scaleX:1.06,scaleY:.94,scaleZ:1.06,ease:'power2.out'})
-      .to(model,{duration:.16,y:0,scaleX:1,scaleY:1,scaleZ:1,ease:'bounce.out'})
-      .to(model,{duration:.08,x:-.06,rotationZ:-.07})
-      .to(model,{duration:.08,x:.06,rotationZ:.07})
-      .to(model,{duration:.08,x:0,rotationZ:-.035});
-  }
-
-  fightBtn.addEventListener('click', startFight);
-  stopBtn.addEventListener('click', stopFight);
-
-  /* Start only after the GLB has loaded; no automatic fighting is forced.
-     The character remains visible at all times. */
-})();
-</script>
 
 </body>
 </html>
